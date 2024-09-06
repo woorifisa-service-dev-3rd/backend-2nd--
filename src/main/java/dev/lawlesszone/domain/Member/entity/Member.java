@@ -1,5 +1,6 @@
 package dev.lawlesszone.domain.Member.entity;
 
+import dev.lawlesszone.domain.comment.entity.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
