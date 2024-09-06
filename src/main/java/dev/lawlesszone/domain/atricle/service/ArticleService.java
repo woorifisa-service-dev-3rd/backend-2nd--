@@ -1,5 +1,6 @@
 package dev.lawlesszone.domain.atricle.service;
 
+import dev.lawlesszone.domain.atricle.dto.ArticleDTO;
 import dev.lawlesszone.domain.atricle.entity.Article;
 import dev.lawlesszone.domain.atricle.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +22,16 @@ public class ArticleService {
         return articleRepository.findById(id).orElseThrow();
     }
 
-    public Article saveArticle(Article article) {
-        return articleRepository.save(article);
+    public Article saveArticle(ArticleDTO articleDTO) {
+        Article saveArticle = Article.builder().title(articleDTO.getTitle()).content(articleDTO.getContent()).build();
+        return articleRepository.save(saveArticle);
     }
 
     @Transactional
-    public void updateArticle(Article article, Long id) {
+    public void updateArticle(ArticleDTO articleDTO, Long id) {
         Article findArticle = articleRepository.findById(id).orElseThrow();
-        findArticle.setTitle(article.getTitle());
-        findArticle.setContent(article.getContent());
+        findArticle.setTitle(articleDTO.getTitle());
+        findArticle.setContent(articleDTO.getContent());
     }
 
     @Transactional
