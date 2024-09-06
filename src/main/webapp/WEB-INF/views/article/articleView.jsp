@@ -37,7 +37,7 @@
     </ul>
     <!-- 댓글 입력 폼 -->
     <div class="comment_form">
-        <form action="${pageContext.request.contextPath}/articles/${article.id}/comments" method="post">
+        <form action="${pageContext.request.contextPath}/articles/view/${article.id}/comments" method="post">
             <div>
                 <textarea name="content" rows="4" cols="50" placeholder="댓글을 입력하세요..."></textarea>
             </div>

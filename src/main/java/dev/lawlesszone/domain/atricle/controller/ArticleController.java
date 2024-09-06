@@ -31,7 +31,7 @@ public class ArticleController {
         Article article = articleService.findArticleById(id);
         model.addAttribute("article", article);
 
-        System.out.println("article = " + article);
+//        System.out.println("article = " + article);
 
         return "article/articleView";
     }
