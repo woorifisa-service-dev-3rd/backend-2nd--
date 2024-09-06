@@ -21,26 +21,24 @@
             display: none;
         }
     </style>
-    <script defer>
-        async function deleteComment(articleId, commentId) {
-            if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
-                try {
-                    const response = await fetch(`/articles/view/${articleId}/comments/${commentId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    if (response.ok) {
-                        // 댓글 삭제가 성공적일 경우 페이지를 새로고침
-                        window.location.reload();
-                    } else {
-                        alert('댓글 삭제에 실패했습니다.');
+    <script>
+        const articleDelete = (id) => {
+            if(confirm("삭제하시겠습니까?")){
+                fetch(`/articles/delete/${id}`,{
+                    method: "GET",
+                    headers: {
+                        "Accept" : "application/json"
                     }
-                } catch (error) {
-                    console.error('삭제 요청 중 오류 발생:', error);
-                    alert('댓글 삭제 요청 중 오류가 발생했습니다.');
-                }
+                }).then(response =>{
+                    if(!response.ok){
+                        throw new Error("에러가 발생했습니다!");
+                    }
+                }).then(data =>{
+                    alert("삭제가 완료되었습니다!");
+                    location.href="/articles/list";
+                }).catch(error => {
+                    alert("오류: " + error.message);
+                });
             }
         }
 
@@ -54,6 +52,8 @@
 <div class="article">
     <h2>${article.title}</h2>
     <p>${article.content}</p>
+    <a href="/articles/edit/${article.id}">수정하기</a>
+    <button onClick="articleDelete(${article.id})">삭제하기</button>
 </div>
 <div class="comment_list">
     <ul>
