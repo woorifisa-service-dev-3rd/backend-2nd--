@@ -13,6 +13,11 @@ import dev.lawlesszone.domain.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.Response;
@@ -20,6 +25,7 @@ import retrofit2.Response;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller()
 @RequestMapping("/payment")
@@ -56,8 +62,13 @@ public class PaymentController {
 
         return "payment/";
     }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user")
-    public String user() {
+    public String user(Principal principal) {
+
+//        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+//        System.out.println(username);
         return "payment/userDetail";
     }
 }
