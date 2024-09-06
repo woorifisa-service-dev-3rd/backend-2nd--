@@ -2,6 +2,8 @@ package dev.lawlesszone.domain.atricle.entity;
 
 
 
+import dev.lawlesszone.domain.comment.entity.Comment;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
