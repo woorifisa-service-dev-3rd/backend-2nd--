@@ -1,4 +1,8 @@
 package dev.lawlesszone.domain.atricle.repository;
 
-public interface ArticleRepository {
+import dev.lawlesszone.domain.atricle.entity.Article;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ArticleRepository extends JpaRepository<Article, Long> {
+
 }
