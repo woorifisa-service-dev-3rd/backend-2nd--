@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -33,4 +33,12 @@ public class Article {
     private List<Comment> comments = new ArrayList<>();
 
     private Long viewCount;
+
+    public String setTitle(String title) {
+        return this.title = title;
+    }
+
+    public String setContent(String content) {
+        return this.content = content;
+    }
 }

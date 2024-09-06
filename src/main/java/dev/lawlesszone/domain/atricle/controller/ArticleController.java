@@ -1,5 +1,6 @@
 package dev.lawlesszone.domain.atricle.controller;
 
+import dev.lawlesszone.domain.atricle.dto.ArticleDTO;
 import dev.lawlesszone.domain.atricle.entity.Article;
 import dev.lawlesszone.domain.atricle.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +44,8 @@ public class ArticleController {
     }
 
     @PostMapping(path = "/write")
-    public String ArticleSave(Article article) {
-        articleService.saveArticle(article);
-        System.out.println("write post()");
+    public String ArticleSave(ArticleDTO articleDTO) {
+        articleService.saveArticle(articleDTO);
         return "redirect:/articles/list";
     }
 
@@ -57,14 +57,13 @@ public class ArticleController {
     }
 
     @PostMapping(path = "/edit/{id}")
-    public String ArticleEdit(@PathVariable("id") Long id, Article article, Model model) {
-        articleService.updateArticle(article, id);
+    public String ArticleEdit(@PathVariable("id") Long id, ArticleDTO articleDTO, Model model) {
+        articleService.updateArticle(articleDTO, id);
         return "redirect:/articles/view/"+id;
     }
 
     @GetMapping(path = "/delete/{id}")
     public ResponseEntity<Void> ArticleDelete(@PathVariable("id") Long id) {
-        System.out.println("삭제 컨트롤러");
         articleService.deleteArticle(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
