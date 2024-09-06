@@ -1,11 +1,7 @@
 package dev.lawlesszone.domain.Member.entity;
 
 import dev.lawlesszone.domain.comment.entity.Comment;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 
 
 import dev.lawlesszone.domain.atricle.entity.Article;

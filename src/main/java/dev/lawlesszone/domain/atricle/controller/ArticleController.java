@@ -30,7 +30,9 @@ public class ArticleController {
     public String ArticleView(@PathVariable("id") Long id, Model model) {
         Article article = articleService.findArticleById(id);
         model.addAttribute("article", article);
-        
+
+        System.out.println("article = " + article);
+
         return "article/articleView";
     }
 }
