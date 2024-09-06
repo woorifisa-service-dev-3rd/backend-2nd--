@@ -18,28 +18,6 @@
     <p>Hi, my name is <strong>John Doe</strong>. I am a software engineer with a passion for building web applications and learning new technologies. I love exploring the latest trends in software development and applying them in real-world projects.</p>
 </section>
 
-<section id="profile">
-    <h2>Profile</h2>
-    <table>
-        <tr>
-            <td><strong>Name:</strong></td>
-            <td>John Doe</td>
-        </tr>
-        <tr>
-            <td><strong>Age:</strong></td>
-            <td>29</td>
-        </tr>
-        <tr>
-            <td><strong>Location:</strong></td>
-            <td>New York, USA</td>
-        </tr>
-        <tr>
-            <td><strong>Occupation:</strong></td>
-            <td>Software Engineer</td>
-        </tr>
-    </table>
-</section>
-
 <section id="contact">
     <h2>Contact Me</h2>
     <p>Email: <a href="mailto:johndoe@example.com">johndoe@example.com</a></p>
