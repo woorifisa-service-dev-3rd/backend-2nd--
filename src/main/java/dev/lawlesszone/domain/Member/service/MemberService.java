@@ -1,8 +1,6 @@
 package dev.lawlesszone.domain.Member.service;
 
-import ch.qos.logback.core.CoreConstants;
-import dev.lawlesszone.domain.Member.dto.LoginRequestDTO;
-import dev.lawlesszone.domain.Member.dto.LoginResponseDTO;
+import dev.lawlesszone.domain.Member.dto.MemberInfoDTO;
 import dev.lawlesszone.domain.Member.dto.SignupRequestDTO;
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.Member.repository.MemberRepository;
@@ -48,19 +46,8 @@ public class MemberService implements UserDetailsService {
         Member member = optionalMember.get();
         return new org.springframework.security.core.userdetails.User(member.getEmail(), member.getPassword(), new ArrayList<>());
     }
+    public MemberInfoDTO findByEmail(String email) {
+        return MemberInfoDTO.createUserInfoDTO(memberRepository.findByEmail(email).orElseThrow());
 
-//    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) throws Exception {
-//        String inputEmail = loginRequestDTO.getEmail();
-//        String inputPassword = loginRequestDTO.getPassword();
-//        System.out.println(inputEmail);
-//        System.out.println(inputPassword);
-//        Optional<Member> optionalMember = memberRepository.findByEmail(inputEmail);
-//        optionalMember.orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
-//        Member member = optionalMember.get();
-//        if (passwordEncoder.matches(inputPassword, member.getPassword())) {
-//            return LoginResponseDTO.createLoginResponseDTO(member);
-//        } else {
-//            throw new Exception("비밀번호가 일치하지 않습니다.");
-//        }
-//    }
+    }
 }

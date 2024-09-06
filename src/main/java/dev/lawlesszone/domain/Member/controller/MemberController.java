@@ -1,16 +1,19 @@
 package dev.lawlesszone.domain.Member.controller;
 
-import dev.lawlesszone.domain.Member.dto.LoginRequestDTO;
+import dev.lawlesszone.domain.Member.dto.MemberInfoDTO;
 import dev.lawlesszone.domain.Member.dto.SignupRequestDTO;
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.Member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 
 
@@ -45,4 +48,13 @@ public class MemberController {
         return "member/login";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/detail")
+    public String user(Authentication authentication, Model model) {
+
+        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        MemberInfoDTO member = memberService.findByEmail(email);
+        model.addAttribute("member",member);
+        return "memebr/userDetail";
+    }
 }
