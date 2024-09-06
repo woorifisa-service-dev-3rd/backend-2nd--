@@ -2,6 +2,7 @@ package dev.lawlesszone.domain.comment.service;
 
 import dev.lawlesszone.domain.atricle.entity.Article;
 import dev.lawlesszone.domain.atricle.repository.ArticleRepository;
+import dev.lawlesszone.domain.comment.dto.CommentDTO;
 import dev.lawlesszone.domain.comment.entity.Comment;
 import dev.lawlesszone.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +17,17 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
 
-    public Comment saveComment(Comment comment, Long articleId) {
+    public Comment saveComment(CommentDTO comment, Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow();
         comment.setArticle(findArticle);
-
         // TODO: 로그인 여부에 따라 설정
         comment.setIsAnonymous(true);
-        return commentRepository.save(comment);
+
+        return commentRepository.save(Comment.builder().content(comment.getContent()).article(comment.getArticle()).isAnonymous(comment.getIsAnonymous()).build());
     }
 
     @Transactional
-    public Comment updateComment(Comment comment, Long CommentId) {
+    public Comment updateComment(CommentDTO comment, Long CommentId) {
         Comment findComment = commentRepository.findById(CommentId).orElseThrow();
         findComment.setContent(comment.getContent());
         return findComment;

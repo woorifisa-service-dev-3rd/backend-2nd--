@@ -1,18 +1,19 @@
 package dev.lawlesszone.domain.Member.dto;
 
 import dev.lawlesszone.domain.Member.entity.Member;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponseDTO {
+    private Long id;
+
     @Email
     private String email;
 
@@ -24,6 +25,6 @@ public class LoginResponseDTO {
     }
 
     public static LoginResponseDTO createLoginResponseDTO(Member member) {
-        return new LoginResponseDTO(member);
+        return LoginResponseDTO.builder().id(member.getId()).email(member.getEmail()).nickName(member.getNickName()).build();
     }
 }

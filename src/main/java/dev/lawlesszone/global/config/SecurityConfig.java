@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .antMatchers("/**") .permitAll()
                 .anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
                 .and()
-                .formLogin((formLogin)->formLogin.loginPage("/member/login").defaultSuccessUrl("/").usernameParameter("email").passwordParameter("password").permitAll())
+                .formLogin((formLogin)->formLogin.loginPage("/member/login").defaultSuccessUrl("/article/articleList").usernameParameter("email").passwordParameter("password").permitAll())
                 .userDetailsService(userDetailsService);;
 //                .logout((logout)->logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true))// 로그인 폼 설정
 

@@ -1,15 +1,14 @@
 package dev.lawlesszone.domain.Member.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class SignupRequestDTO {
     @Email
