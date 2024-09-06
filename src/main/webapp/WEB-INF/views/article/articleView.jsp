@@ -9,6 +9,17 @@
         body {
             font-family: Arial, sans-serif;
         }
+        .post {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .post h2 {
+            margin-top: 0;
+        }
+        .edit-form {
+            display: none;
+        }
     </style>
     <script>
         const articleDelete = (id) => {
@@ -30,6 +41,11 @@
                 });
             }
         }
+
+        function showEditForm(commentId) {
+            document.getElementById('edit-form-' + commentId).style.display = 'block';
+            document.getElementById('content-wrapper-' + commentId).style.display = 'none';
+        }
     </script>
 </head>
 <body>
@@ -44,15 +60,29 @@
         <c:forEach items="${article.comments}" var="comment">
             <li>
                 <b>${comment.author.nickName}</b>
-                <p>${comment.content}</p>
-                <button>수정</button>
-                <button>삭제</button>
+                <div id="content-wrapper-${comment.id}">
+                    <p>${comment.content}</p>
+                    <button onclick="showEditForm(${comment.id})">수정</button>
+                    <!-- 댓글 삭제 -->
+                    <form action="${article.id}/comments/delete/${comment.id}" method="post" style="display:inline;">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit">삭제</button>
+                    </form>
+                </div>
+                <!-- 댓글 수정 폼 -->
+                <form id="edit-form-${comment.id}" class="edit-form" action="${article.id}/comments/update/${comment.id}" method="post">
+                    <div>
+                        <input type="hidden" name="_method" value="put" />
+                        <textarea name="content" rows="4" cols="50">${comment.content}</textarea>
+                    </div>
+                    <button type="submit">수정 완료</button>
+                </form>
             </li>
         </c:forEach>
     </ul>
     <!-- 댓글 입력 폼 -->
     <div class="comment_form">
-        <form action="${pageContext.request.contextPath}/articles/view/${article.id}/comments" method="post">
+        <form action="${article.id}/comments" method="post">
             <div>
                 <textarea name="content" rows="4" cols="50" placeholder="댓글을 입력하세요..."></textarea>
             </div>
