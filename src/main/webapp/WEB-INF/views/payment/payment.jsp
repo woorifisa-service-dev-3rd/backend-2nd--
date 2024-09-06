@@ -23,7 +23,7 @@
             pg: "html5_inicis",
             pay_method: "card",
             merchant_uid: "<%= "ORD" + System.currentTimeMillis() %>", // 고유 주문번호 생성
-            name: "노르웨이 회전 의자",
+            name: "왕관",
             amount: 100,
             buyer_email: "gildong@gmail.com",
             buyer_name: "홍길동",

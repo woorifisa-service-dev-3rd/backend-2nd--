@@ -48,6 +48,10 @@ public class MemberService implements UserDetailsService {
         Member member = optionalMember.get();
         return new org.springframework.security.core.userdetails.User(member.getEmail(), member.getPassword(), new ArrayList<>());
     }
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow();
+
+    }
 
 //    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) throws Exception {
 //        String inputEmail = loginRequestDTO.getEmail();

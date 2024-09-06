@@ -5,6 +5,7 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.payment.dto.CancelPaymentDTO;
 import dev.lawlesszone.domain.payment.dto.PaymentDTO;
 import dev.lawlesszone.domain.payment.dto.PreparationRequest;
@@ -19,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.Response;
 
@@ -63,12 +65,5 @@ public class PaymentController {
         return "payment/";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/user")
-    public String user(Principal principal) {
 
-//        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-//        System.out.println(username);
-        return "payment/userDetail";
-    }
 }
