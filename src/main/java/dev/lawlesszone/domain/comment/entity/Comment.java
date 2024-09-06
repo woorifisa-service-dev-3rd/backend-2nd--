@@ -2,14 +2,11 @@ package dev.lawlesszone.domain.comment.entity;
 
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.atricle.entity.Article;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
