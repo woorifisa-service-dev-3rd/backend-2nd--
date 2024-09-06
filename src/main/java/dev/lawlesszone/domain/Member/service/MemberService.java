@@ -6,15 +6,20 @@ import dev.lawlesszone.domain.Member.dto.LoginResponseDTO;
 import dev.lawlesszone.domain.Member.dto.SignupRequestDTO;
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.Member.repository.MemberRepository;
+import dev.lawlesszone.domain.payment.entity.Payment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +55,19 @@ public class MemberService implements UserDetailsService {
     }
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email).orElseThrow();
-
+    }
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElseThrow();
+    }
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    public void decreasePremiumStatus() {
+        // 모든 결제 데이터에서 isPremium 값이 0보다 큰 경우 1 감소
+        List<Member> updatedMembers = memberRepository.findAll().stream()
+                .filter(member -> member.getPremium() > 0)
+                .peek(member -> member.setPremium(member.getPremium() - 1))
+                .collect(Collectors.toList());
+        memberRepository.saveAll(updatedMembers);
     }
 
 //    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) throws Exception {

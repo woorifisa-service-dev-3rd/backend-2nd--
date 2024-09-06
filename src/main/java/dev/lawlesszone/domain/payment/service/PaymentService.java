@@ -12,6 +12,7 @@ import dev.lawlesszone.domain.Member.repository.MemberRepository;
 import dev.lawlesszone.domain.payment.dto.PaymentDTO;
 import dev.lawlesszone.domain.payment.dto.PreparationRequest;
 import dev.lawlesszone.domain.payment.dto.PreparationResponse;
+import dev.lawlesszone.domain.payment.dto.SendPaymentDTO;
 import dev.lawlesszone.domain.payment.entity.Payment;
 import dev.lawlesszone.domain.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,51 +41,41 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final MemberRepository memberRepository;
 
-    public PreparationResponse prepareValid(PreparationRequest request) throws IamportResponseException, IOException {
-
-        PrepareData prepareData = new PrepareData(request.getMerchantUid(), request.getTotalPrice());
-        IamportResponse<Prepare> iamportResponse = iamportClient.postPrepare(prepareData);
-
-        log.info("결과 코드 : {}", iamportResponse.getCode());
-        log.info("결과 메시지 : {}", iamportResponse.getMessage());
-
-        if (iamportResponse.getCode() != 0) {
-            throw new RuntimeException(iamportResponse.getMessage());
-        }
-        return PreparationResponse.builder().merchantUid(request.getMerchantUid()).build();
+    public List<SendPaymentDTO>findAllByMemberEmail(String email) {
+        List<Payment> paymentList= paymentRepository.findAllByMemberEmail(email);
+        return paymentList.stream()
+                .filter(payment -> payment.isValid())
+                .map(this::DTOToEntity).collect(Collectors.toList());
+    }
+    SendPaymentDTO DTOToEntity(Payment payment) {
+        return SendPaymentDTO.builder()
+                .id(payment.getId())
+                .valid(payment.isValid())
+                .build();
     }
 
-    public void saveOrUpdate(PaymentDTO paymentDTO,Long id) {
-        Member member=memberRepository.findById(id).orElseThrow();
-        Payment payment = member.getPayment();
-        if(payment ==null){
-            Payment newPayment= Payment.builder()
-                    .merchantUid(paymentDTO.getMerchantUid())
-                    .isPremium(30)
-                    .build();
-            paymentRepository.save(newPayment);
-        }
-        else{
+    public void saveOrUpdate(PaymentDTO paymentDTO,String email) {
+        Member member=memberRepository.findByEmail(email).orElseThrow();
+        List<Payment> paymentList= member.getPayment();
+        System.out.println("paymet"+paymentList);
 
-            Payment newPayment= Payment.builder()
-                    .merchantUid(paymentDTO.getMerchantUid())
-                    .isPremium(payment.getIsPremium()+30)
-                    .id(payment.getId())
-                    .build();
-            paymentRepository.save(newPayment);
-        }
+        Payment newPayment= Payment.builder()
+                .valid(true)
+                .merchantUid(paymentDTO.getMerchantUid())
+                .build();
+
+        newPayment.setMember(member);
+        paymentRepository.save(newPayment);
+        member.setPremium(member.getPremium() +30);
+        memberRepository.save(member);
+
+    }
+    public Payment findMerchantUid(Long id) {
+        Payment payment= paymentRepository.findById(id).orElseThrow();
+        return payment;
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
-    @Transactional
-    public void decreasePremiumStatus() {
-        // 모든 결제 데이터에서 isPremium 값이 0보다 큰 경우 1 감소
-        List<Payment> updatedPayments = paymentRepository.findAll().stream()
-                .filter(payment -> payment.getIsPremium() > 0)
-                .peek(payment -> payment.setIsPremium(payment.getIsPremium() - 1))
-                .collect(Collectors.toList());
-        paymentRepository.saveAll(updatedPayments);
-    }
+
 
     public String getToken() {
         String url = "https://api.iamport.kr/users/getToken";
@@ -100,16 +91,33 @@ public class PaymentService {
         System.out.println(response.getBody());
         return extractAccessToken(response.getBody());
     }
-    public String checkCancel(String accessToken,String merchantUid){
+    public Integer checkCancel(Member member,String accessToken,Payment payment){
         String url="https://api.iamport.kr/payments/cancel";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set("Authorization", accessToken);
-        String body= String.format("{\"merchant_uid\":\"%s\"}",merchantUid);
+        String body= String.format("{\"merchant_uid\":\"%s\"}",payment.getMerchantUid());
         HttpEntity<String> request = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
-        String ss= check(response.getBody());
-        return ss;
+
+
+        Integer i= check(response.getBody());
+        if(i==1){
+            return i;
+        }
+        if(i==200){
+            member.getPayment().remove(payment);
+            payment.setValid(false);
+            if(member.getPremium()<30){
+                member.setPremium(0);
+            }
+            else{
+                member.setPremium(member.getPremium()-30);
+            }
+            memberRepository.save(member);
+            paymentRepository.save(payment);
+        }
+        return i;
     }
 
 
@@ -128,16 +136,19 @@ public class PaymentService {
         }
         return null;
     }
-    private String check(String responseBody) {
+    private Integer check(String responseBody) {
         try {
             JsonNode jsonNode = jacksonObjectMapper.readTree(responseBody);
             JsonNode codeNode = jsonNode.get("code");
 
             if (codeNode.asInt() == 0) {
-                return "성공";
+                return 200;
+            }
+            else if (codeNode.asInt() == 1) {
+                return 1;
             }
             else {
-                return "실패";
+                return 400;
             }
         } catch (Exception e) {
             e.printStackTrace(); // 또는 적절한 예외 처리

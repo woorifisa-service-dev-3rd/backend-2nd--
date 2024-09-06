@@ -57,6 +57,6 @@ public class MemberController {
         System.out.println(email);
         Member member = memberService.findByEmail(email);
         model.addAttribute("member",member);
-        return "memebr/userDetail";
+        return "member/userDetail";
     }
 }
