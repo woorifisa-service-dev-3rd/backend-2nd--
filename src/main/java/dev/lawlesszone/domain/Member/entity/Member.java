@@ -5,12 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
+
 
 import dev.lawlesszone.domain.atricle.entity.Article;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
