@@ -9,4 +9,5 @@ import lombok.*;
 @Builder
 @ToString
 public class PaymentDTO {
+    private int id;
 }
