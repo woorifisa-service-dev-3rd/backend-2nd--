@@ -1,5 +1,7 @@
 package dev.lawlesszone.domain.comment.entity;
 
+import dev.lawlesszone.domain.atricle.entity.Article;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,4 +15,6 @@ public class Comment {
     private String content;
     private Member author;
     private Boolean isAnonymous;
+
+    private Article article;
 }
