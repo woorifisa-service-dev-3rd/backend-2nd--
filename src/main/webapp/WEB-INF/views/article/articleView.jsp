@@ -83,6 +83,7 @@
     <!-- 댓글 입력 폼 -->
     <div class="comment_form">
         <form action="${article.id}/comments" method="post">
+            <b>${email}</b>
             <div>
                 <textarea name="content" rows="4" cols="50" placeholder="댓글을 입력하세요..."></textarea>
             </div>
