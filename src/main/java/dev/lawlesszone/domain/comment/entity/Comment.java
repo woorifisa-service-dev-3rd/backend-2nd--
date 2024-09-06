@@ -6,10 +6,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Getter @Setter
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 
 @Entity
 public class Comment {
@@ -17,6 +17,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     private String content;
 
     @ManyToOne
