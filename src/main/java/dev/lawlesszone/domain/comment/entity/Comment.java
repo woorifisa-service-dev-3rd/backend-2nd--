@@ -26,4 +26,6 @@ public class Comment {
     private Member author;
 
     private Boolean isAnonymous;
+
+    private Article article;
 }
