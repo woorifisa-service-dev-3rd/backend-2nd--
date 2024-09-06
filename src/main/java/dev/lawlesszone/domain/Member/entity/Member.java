@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 
@@ -28,12 +28,10 @@ public class Member {
 
     private String password;
 
-    @Lazy
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Article> articles;
 
-    @Lazy
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     private String nickName;
