@@ -3,8 +3,11 @@ package dev.lawlesszone.global.config;
 import com.siot.IamportRestClient.IamportClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
+@EnableScheduling
 public class AppConfig {
 
     String apiKey = "8710522058100173";
@@ -14,4 +17,10 @@ public class AppConfig {
     public IamportClient iamportClient() {
         return new IamportClient(apiKey, secretKey);
     }
+
+        @Bean
+        public RestTemplate restTemplate() {
+            return new RestTemplate();
+        }
+
 }

@@ -37,16 +37,19 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // 아임포트 관련 //
-    // https://mvnrepository.com/artifact/com.github.iamport/iamport-rest-client-java
-    implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
-    // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava2
-    implementation group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: '2.9.0'
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
-    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
-    implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
+// 아임포트 관련
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.23' // 최신 버전으로 업데이트됨
+
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+// OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0' // 최신 버전으로 업데이트됨
+
+
+
+
+
+
 }
 
 tasks.named('test') {
