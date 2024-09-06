@@ -7,6 +7,7 @@ import dev.lawlesszone.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -22,5 +23,16 @@ public class CommentService {
         // TODO: 로그인 여부에 따라 설정
         comment.setIsAnonymous(true);
         return commentRepository.save(comment);
+    }
+
+    @Transactional
+    public Comment updateComment(Comment comment, Long CommentId) {
+        Comment findComment = commentRepository.findById(CommentId).orElseThrow();
+        findComment.setContent(comment.getContent());
+        return findComment;
+    }
+
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 }
