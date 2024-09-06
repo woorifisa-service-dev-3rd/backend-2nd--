@@ -1,7 +1,6 @@
 package dev.lawlesszone.domain.Member.entity;
 
 import dev.lawlesszone.domain.comment.entity.Comment;
-import lombok.*;
 import dev.lawlesszone.domain.payment.entity.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +37,6 @@ public class Member {
 
     private String nickName;
 
-    //충돌사항
     @OneToOne(fetch = FetchType.LAZY)
     private Payment payment;
 }
