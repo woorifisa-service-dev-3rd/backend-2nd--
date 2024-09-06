@@ -1,24 +1,22 @@
 package dev.lawlesszone.domain.Member.entity;
 
 import dev.lawlesszone.domain.comment.entity.Comment;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import dev.lawlesszone.domain.atricle.entity.Article;
 
 import java.util.List;
 
 @Getter
-@Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 
 @Entity
 public class Member {
@@ -30,12 +28,10 @@ public class Member {
 
     private String password;
 
-    @Lazy
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Article> articles;
 
-    @Lazy
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     private String nickName;
