@@ -37,5 +37,6 @@
     </c:forEach>
     </tbody>
 </table>
+<a href="write">등록하기</a>
 </body>
 </html>

@@ -9,20 +9,35 @@
         body {
             font-family: Arial, sans-serif;
         }
-        .post {
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-        }
-        .post h2 {
-            margin-top: 0;
-        }
     </style>
+    <script>
+        const articleDelete = (id) => {
+            if(confirm("삭제하시겠습니까?")){
+                fetch(`/articles/delete/${id}`,{
+                    method: "GET",
+                    headers: {
+                        "Accept" : "application/json"
+                    }
+                }).then(response =>{
+                    if(!response.ok){
+                        throw new Error("에러가 발생했습니다!");
+                    }
+                }).then(data =>{
+                    alert("삭제가 완료되었습니다!");
+                    location.href="/articles/list";
+                }).catch(error => {
+                    alert("오류: " + error.message);
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="article">
     <h2>${article.title}</h2>
     <p>${article.content}</p>
+    <a href="/articles/edit/${article.id}">수정하기</a>
+    <button onClick="articleDelete(${article.id})">삭제하기</button>
 </div>
 <div class="comment_list">
     <ul>
