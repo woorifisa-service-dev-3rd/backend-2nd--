@@ -53,14 +53,13 @@ public class ArticleController {
     public String ArticleEdit(@PathVariable("id") Long id, Model model) {
         Article article = articleService.findArticleById(id);
         model.addAttribute("article", article);
-        System.out.println("article = " + article);
         return  "article/articleEdit";
     }
 
     @PostMapping(path = "/edit/{id}")
     public String ArticleEdit(@PathVariable("id") Long id, Article article, Model model) {
         articleService.updateArticle(article, id);
-        return "redirect:/articles/list";
+        return "redirect:/articles/view/"+id;
     }
 
     @GetMapping(path = "/delete/{id}")
