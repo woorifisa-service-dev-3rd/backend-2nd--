@@ -36,4 +36,5 @@ public class Member {
 
     private String nickName;
 
+
 }
