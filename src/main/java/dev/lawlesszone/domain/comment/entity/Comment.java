@@ -30,5 +30,6 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "article_id")
+
     private Article article;
 }
