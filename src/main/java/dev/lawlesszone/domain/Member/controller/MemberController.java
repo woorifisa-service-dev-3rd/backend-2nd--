@@ -53,7 +53,7 @@ public class MemberController {
     public String user(Authentication authentication, Model model) {
 
         String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        MemberInfoDTO member = memberService.findByEmail(email);
+        MemberInfoDTO member = memberService.findByEmailWithDTO(email);
         model.addAttribute("member",member);
         return "member/userDetail";
     }
