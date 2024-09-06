@@ -18,9 +18,9 @@ public class Article {
     private String title;
     private String content;
 
-    private Member author;
+//    private Member author;
 
-    private List<Comment> comments = new ArrayList<>();
+//    private List<Comment> comments = new ArrayList<>();
 
     private Long viewCount;
 }
