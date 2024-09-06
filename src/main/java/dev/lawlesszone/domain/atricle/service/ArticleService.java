@@ -26,12 +26,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article updateArticle(Article article, Long id) {
+    public void updateArticle(Article article, Long id) {
         Article findArticle = articleRepository.findById(id).orElseThrow();
         findArticle.setTitle(article.getTitle());
         findArticle.setContent(article.getContent());
-
-        return findArticle;
     }
 
     @Transactional
