@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-
 import dev.lawlesszone.domain.atricle.entity.Article;
 
 import javax.persistence.*;
