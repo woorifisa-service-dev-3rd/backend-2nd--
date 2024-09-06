@@ -21,6 +21,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -36,8 +37,24 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // 아임포트 관련 //
+// 아임포트 관련
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.23' // 최신 버전으로 업데이트됨
+
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+// OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0' // 최신 버전으로 업데이트됨
+
+
+
+
+
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+

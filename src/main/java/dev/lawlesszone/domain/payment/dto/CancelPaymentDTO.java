@@ -1,6 +1,5 @@
 package dev.lawlesszone.domain.payment.dto;
 
-
 import lombok.*;
 
 @Data
@@ -8,8 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class PaymentDTO {
-    private String impUid   ;
-    private String merchantUid;
-    private String amount;
+public class CancelPaymentDTO {
+    private String code;
+    private String message;
 }
