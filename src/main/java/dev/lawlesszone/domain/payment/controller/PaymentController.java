@@ -53,8 +53,9 @@ public class PaymentController {
     //id 넣어 놓고
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/validate/{uid}")
-    public ModelAndView createPayment(Model model, @RequestBody PaymentDTO paymentDTO,
+    public ModelAndView createPayment(@RequestBody PaymentDTO paymentDTO,
                                 @AuthenticationPrincipal UserDetails userDetails) throws IamportResponseException, IOException {
+        log.info("결제 처리 진행중");
         return paymentService.checkValid(paymentDTO,userDetails.getUsername());
     }
 
