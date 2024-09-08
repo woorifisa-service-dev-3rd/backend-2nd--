@@ -42,10 +42,11 @@ public class PaymentService {
     public ModelAndView checkValid(PaymentDTO paymentDTO ,String email) throws IamportResponseException, IOException {
         ModelAndView mav= new ModelAndView();
         mav.setViewName("redirect:/member/detail");
-
+        log.info("결제 검증 중");
         IamportResponse<com.siot.IamportRestClient.response.Payment> response= iamportClient.paymentByImpUid(paymentDTO.getImpUid());
-        if (response.getCode() != 200 ||!Objects.equals(response.getResponse().getAmount(), BigDecimal.valueOf(100)) ) {
+        if (response.getCode() != 0||  response.getResponse().getAmount().compareTo(BigDecimal.valueOf(100)) != 0 ) {
             mav.addObject("result", "결제 오류");
+            log.info("결제 오류");
             return mav;
         }
 
@@ -54,9 +55,11 @@ public class PaymentService {
                 .valid(true)
                 .merchantUid(paymentDTO.getMerchantUid())
                 .build();
+
         newPayment.addMember(member);
         paymentRepository.save(newPayment);
         mav.addObject("result", "결제 완료");
+        log.info("결제완료");
         return mav;
 
     }
