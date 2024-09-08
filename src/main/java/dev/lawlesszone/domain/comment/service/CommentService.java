@@ -17,20 +17,19 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
 
-    public Comment saveComment(CommentDTO comment, Long articleId) {
+    public void saveComment(CommentDTO comment, Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow();
         comment.setArticle(findArticle);
         // TODO: 로그인 여부에 따라 설정
         comment.setIsAnonymous(true);
 
-        return commentRepository.save(Comment.builder().content(comment.getContent()).article(comment.getArticle()).isAnonymous(comment.getIsAnonymous()).build());
+        commentRepository.save(Comment.builder().content(comment.getContent()).article(comment.getArticle()).isAnonymous(comment.getIsAnonymous()).build());
     }
 
     @Transactional
-    public Comment updateComment(CommentDTO comment, Long CommentId) {
+    public void updateComment(CommentDTO comment, Long CommentId) {
         Comment findComment = commentRepository.findById(CommentId).orElseThrow();
         findComment.setContent(comment.getContent());
-        return findComment;
     }
 
     public void deleteComment(Long commentId) {

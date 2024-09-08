@@ -6,6 +6,8 @@ import dev.lawlesszone.domain.atricle.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +33,12 @@ public class ArticleController {
     }
 
     @GetMapping(path = "/view/{id}")
-    public String ArticleView(@PathVariable("id") Long id, Model model) {
+    public String ArticleView(Authentication authentication, @PathVariable("id") Long id, Model model) {
+        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        model.addAttribute("email", email);
+
         Article article = articleService.findArticleById(id);
         model.addAttribute("article", article);
-
         return "article/articleView";
     }
 
