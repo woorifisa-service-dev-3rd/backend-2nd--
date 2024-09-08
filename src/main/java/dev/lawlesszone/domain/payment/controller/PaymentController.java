@@ -29,19 +29,22 @@ import java.util.List;
 @Slf4j
 public class PaymentController {
 
-    private final IamportClient iamportClient;
     private final PaymentService paymentService;
     private final MemberService memberService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public String showPaymentList(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        List<SendPaymentDTO> paymentList = paymentService.findAllByMemberEmail(userDetails.getUsername());
+    public ModelAndView showPaymentList(@AuthenticationPrincipal UserDetails userDetails) {
+        ModelAndView mav = new ModelAndView();
+        List<SendPaymentDTO> paymentList=paymentService.findValidPaymentsByMemberEmail(userDetails.getUsername());
+
         if (paymentList.isEmpty()) {
-            return "redirect:/member/detail";
+            mav.setViewName("redirect:/member/detail");
+            return mav;
         }
-        model.addAttribute("paymentList", paymentList);
-        return "payment/list";
+        mav.addObject("paymentList", paymentList);
+        mav.setViewName("payment/list");
+        return mav;
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -59,10 +62,4 @@ public class PaymentController {
         return paymentService.checkValid(paymentDTO,userDetails.getUsername());
     }
 
-    @GetMapping()
-    public String showPayment(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        Member member = memberService.findByEmail(userDetails.getUsername());
-        model.addAttribute("memberId", member.getId());
-        return "payment/payment";
-    }
 }

@@ -64,9 +64,9 @@ public class PaymentService {
 
     }
 
-    public List<SendPaymentDTO> findAllByMemberEmail(String email) {
-        List<Payment> paymentList = paymentRepository.findAllByMemberEmail(email);
-        return paymentList.stream()
+    public List<SendPaymentDTO> findValidPaymentsByMemberEmail(String email) {
+        return paymentRepository
+                .findAllByMemberEmail(email).stream()
                 .filter(payment -> payment.isValid())
                 .map(this::DTOToEntity).collect(Collectors.toList());
     }
