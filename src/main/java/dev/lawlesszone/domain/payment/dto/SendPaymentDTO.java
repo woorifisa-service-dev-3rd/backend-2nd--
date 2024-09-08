@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class CancelPaymentDTO {
-    private String code;
-    private String message;
+public class SendPaymentDTO {
+    private Long id;
+    private boolean valid;
 }

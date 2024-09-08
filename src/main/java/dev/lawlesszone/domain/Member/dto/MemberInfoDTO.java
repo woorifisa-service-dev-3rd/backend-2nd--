@@ -20,7 +20,9 @@ public class MemberInfoDTO {
 
     private String nickName;
 
-    static public MemberInfoDTO createUserInfoDTO(Member member) {
-        return MemberInfoDTO.builder().email(member.getEmail()).nickName(member.getEmail()).id(member.getId()).build();
+    private int premium;
+
+    public static  MemberInfoDTO from(Member member) {
+        return MemberInfoDTO.builder().email(member.getEmail()).nickName(member.getEmail()).id(member.getId()).premium(member.getPremium()).build();
     }
 }

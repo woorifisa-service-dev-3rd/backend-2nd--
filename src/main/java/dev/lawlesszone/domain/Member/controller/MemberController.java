@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,11 +51,11 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail")
-    public String user(Authentication authentication, Model model) {
-
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        MemberInfoDTO member = memberService.findByEmail(email);
+    public String user(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        log.info(userDetails.toString());
+        String email = userDetails.getUsername();
+        MemberInfoDTO member = memberService.findByEmailWithDTO(email);
         model.addAttribute("member",member);
-        return "memebr/userDetail";
+        return "member/userDetail";
     }
 }
