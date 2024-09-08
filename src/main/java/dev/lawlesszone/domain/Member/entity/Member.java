@@ -37,7 +37,21 @@ public class Member {
     @OneToMany(mappedBy = "member",fetch = FetchType.LAZY)
     @Builder.Default
     private List<Payment> payment=new ArrayList<>();
-    @Setter
-    @Builder.Default
-    private int premium=0;
+
+    private int premium;
+
+    public void downgradePremium(){
+        if(premium<30){
+            this.premium=0;
+        }
+        else{
+            this.premium-=30;
+        }
+    }
+    public void payPremium(){
+        this.premium+=30;
+    }
+    public void decreaseDailyPremium(){
+        this.premium--;
+    }
 }

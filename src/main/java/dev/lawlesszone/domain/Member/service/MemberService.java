@@ -70,7 +70,7 @@ public class MemberService implements UserDetailsService {
         // 모든 결제 데이터에서 isPremium 값이 0보다 큰 경우 1 감소
         List<Member> updatedMembers = memberRepository.findAll().stream()
                 .filter(member -> member.getPremium() > 0)
-                .peek(member -> member.setPremium(member.getPremium() - 1))
+                .peek(Member::decreaseDailyPremium)
                 .collect(Collectors.toList());
         memberRepository.saveAll(updatedMembers);
     }
