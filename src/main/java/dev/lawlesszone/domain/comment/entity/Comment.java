@@ -2,6 +2,7 @@ package dev.lawlesszone.domain.comment.entity;
 
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.atricle.entity.Article;
+import dev.lawlesszone.domain.comment.dto.CommentDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +18,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     private String content;
 
     @ManyToOne
@@ -29,4 +29,30 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
+
+    public static Comment of(CommentDTO comment, Member member, Article article) {
+        return Comment.builder()
+                .content(comment.getContent())
+                .author(member)
+                .article(article)
+                .isAnonymous(comment.getIsAnonymous())
+                .build();
+    }
+
+    public void setArticle(Article article) {
+        if (this.article.getComments() != null) {
+            this.article.getComments().remove(this);
+        }
+
+        this.article = article;
+        article.getComments().add(this);
+    }
+
+    public void setAnonymous(Boolean anonymous) {
+        isAnonymous = anonymous;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
