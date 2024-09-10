@@ -1,10 +1,7 @@
 package dev.lawlesszone.domain.Member.service;
 
 import ch.qos.logback.core.CoreConstants;
-import dev.lawlesszone.domain.Member.dto.LoginRequestDTO;
-import dev.lawlesszone.domain.Member.dto.LoginResponseDTO;
-import dev.lawlesszone.domain.Member.dto.MemberInfoDTO;
-import dev.lawlesszone.domain.Member.dto.SignupRequestDTO;
+import dev.lawlesszone.domain.Member.dto.*;
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.Member.repository.MemberRepository;
 import dev.lawlesszone.domain.payment.entity.Payment;
@@ -30,7 +27,7 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    public Member signUp(SignupRequestDTO signupRequestDTO) {
+    public SignupResponseDTO signUp(SignupRequestDTO signupRequestDTO) {
         String email = signupRequestDTO.getEmail();
         String nickName = signupRequestDTO.getNickName();
         if (nickName == null || nickName.isEmpty()) {
@@ -41,7 +38,7 @@ public class MemberService implements UserDetailsService {
         if (confirmPassword.equals(password)) {
             String endCodedPassword = passwordEncoder.encode(password);
             Member newMember = Member.builder().email(email).password(endCodedPassword).nickName(nickName).build();
-            return memberRepository.save(newMember);
+            return SignupResponseDTO.fromEntity(memberRepository.save(newMember));
         } else {
             return null;
         }
@@ -54,24 +51,8 @@ public class MemberService implements UserDetailsService {
         Member member = optionalMember.get();
         return new org.springframework.security.core.userdetails.User(member.getEmail(), member.getPassword(), new ArrayList<>());
     }
-    public MemberInfoDTO findByEmailWithDTO(String email) {
+    public MemberInfoDTO findByEmail(String email) {
         return MemberInfoDTO.from(memberRepository.findByEmail(email).orElseThrow());
-    }
 
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow();
-    }
-    public Member findById(Long id) {
-        return memberRepository.findById(id).orElseThrow();
-    }
-    @Scheduled(cron = "0 0 0 * * *")
-    @Transactional
-    public void decreasePremiumStatus() {
-        // 모든 결제 데이터에서 isPremium 값이 0보다 큰 경우 1 감소
-        List<Member> updatedMembers = memberRepository.findAll().stream()
-                .filter(member -> member.getPremium() > 0)
-                .peek(Member::decreaseDailyPremium)
-                .collect(Collectors.toList());
-        memberRepository.saveAll(updatedMembers);
     }
 }
