@@ -1,7 +1,11 @@
 package dev.lawlesszone.domain.Member.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
-public class MemberRepository extends JpaRepository {
-    
+import dev.lawlesszone.domain.Member.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByEmail(String email);
 }

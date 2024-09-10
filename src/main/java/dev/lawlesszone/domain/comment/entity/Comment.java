@@ -2,17 +2,14 @@ package dev.lawlesszone.domain.comment.entity;
 
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.atricle.entity.Article;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 
 @Entity
 public class Comment {
@@ -20,6 +17,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     private String content;
 
     @ManyToOne
