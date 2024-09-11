@@ -3,12 +3,10 @@ package dev.lawlesszone.global.provider;
 import dev.lawlesszone.domain.Member.dto.CustomUserDetail;
 import dev.lawlesszone.domain.Member.dto.MemberInfoDTO;
 import dev.lawlesszone.domain.Member.dto.TokenDTO;
-import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.Member.service.MemberService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -19,11 +17,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -53,9 +51,8 @@ public class JwtTokenProvider {
         MemberInfoDTO member = memberService.findByEmail(email);
         Long id = member.getId();
 
-        long now = (new Date()).getTime();
-
-        Date accessTokenExpire = new Date(now + 60*30);
+        Date accessTokenExpire = Date.from(ZonedDateTime.now().plusMonths(1).toInstant());
+        System.out.println(accessTokenExpire);
         String accessToken = Jwts.builder()
                 .subject(authentication.getName())
                 .claim("id", id)
