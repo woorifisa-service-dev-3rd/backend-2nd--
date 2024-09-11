@@ -1,10 +1,8 @@
 package dev.lawlesszone.domain.comment.controller;
 
 import dev.lawlesszone.domain.comment.dto.CommentDTO;
-import dev.lawlesszone.domain.comment.entity.Comment;
 import dev.lawlesszone.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
