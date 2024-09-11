@@ -26,6 +26,8 @@ public class Member {
 
     private String password;
 
+    private String authorities;
+
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Article> articles;
 

@@ -1,9 +1,6 @@
 package dev.lawlesszone.domain.Member.controller;
 
-import dev.lawlesszone.domain.Member.dto.MemberInfoDTO;
-import dev.lawlesszone.domain.Member.dto.SignupRequestDTO;
-import dev.lawlesszone.domain.Member.dto.SignupResponseDTO;
-import dev.lawlesszone.domain.Member.entity.Member;
+import dev.lawlesszone.domain.Member.dto.*;
 import dev.lawlesszone.domain.Member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -12,14 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 
 @Slf4j
@@ -29,11 +25,6 @@ import org.springframework.web.bind.annotation.*;
 //@Slf4j
 public class MemberController {
     private final MemberService memberService;
-
-//    @GetMapping("/signup")
-//    public String signupForm() {
-//        return "member/signup";
-//    }
 
     @PostMapping("/signup")
     public ResponseEntity<SignupResponseDTO> signUp(@Validated SignupRequestDTO signupRequestDTO) {
@@ -45,10 +36,17 @@ public class MemberController {
         }
     }
 
-//    @GetMapping("/login")
-//    public String loginForm() {
-//        return "member/login";
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<TokenDTO> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
+        TokenDTO tokenDTO = memberService.login(loginRequestDTO);
+        Cookie jwtCookie = new Cookie("accessToken", tokenDTO.getAccessToken());
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setMaxAge(60*60*24*30);
+        jwtCookie.setPath("/");
+        jwtCookie.setSecure(false);
+        response.addCookie(jwtCookie);
+        return new ResponseEntity<>(memberService.login(loginRequestDTO),HttpStatus.OK);
+    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail")
