@@ -43,9 +43,10 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDTO updateComment(CommentDTO comment, Long CommentId) {
-        Comment findComment = commentRepository.findById(CommentId).orElseThrow();
-        findComment.setContent(comment.getContent());
+    public CommentDTO updateComment(CommentDTO commentDTO, Long commentId) {
+        Comment findComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException(commentId + "에 해당하는 Comment가 존재하지 않습니다."));
+        findComment.setContent(commentDTO.getContent());
         return CommentDTO.from(findComment);
     }
 

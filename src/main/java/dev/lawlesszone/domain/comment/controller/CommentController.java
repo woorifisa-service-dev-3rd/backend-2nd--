@@ -40,10 +40,10 @@ public class CommentController {
         return new ResponseEntity<>("댓글이 삭제되었습니다.", HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     @PostMapping("/update/{commentId}")
-    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentDTO comment) {
-        commentService.updateComment(comment, commentId);
-        return "redirect:/articles/view/" + articleId;
+    public CommentDTO updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
+        CommentDTO comment = commentService.updateComment(commentDTO, commentId);
+        return comment;
     }
 }
