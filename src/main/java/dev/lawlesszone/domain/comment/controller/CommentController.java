@@ -36,10 +36,10 @@ public class CommentController {
     @PostMapping("/delete/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
         commentService.deleteComment(commentId);
-        return new ResponseEntity<>("댓글이 삭제되었습니다.", HttpStatus.OK);
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/update/{commentId}")
     public CommentDTO updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
         return commentService.updateComment(commentDTO, commentId);
