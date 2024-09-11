@@ -51,6 +51,7 @@
 <body>
 <div class="article">
     <h2>${article.title}</h2>
+    <p>작성자: ${article.author}</p>
     <p>${article.content}</p>
     <a href="/articles/edit/${article.id}">수정하기</a>
     <button onClick="articleDelete(${article.id})">삭제하기</button>
