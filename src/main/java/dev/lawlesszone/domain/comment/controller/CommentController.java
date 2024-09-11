@@ -27,10 +27,9 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public CommentDTO addComment(Authentication authentication, @PathVariable Long articleId, CommentDTO comment) {
+    public CommentDTO addComment(Authentication authentication, @PathVariable Long articleId, CommentDTO commentDTO) {
         String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        CommentDTO commentDTO = commentService.saveComment(comment, articleId, email);
-        return commentDTO;
+        return commentService.saveComment(commentDTO, articleId, email);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -43,7 +42,6 @@ public class CommentController {
 //    @PreAuthorize("isAuthenticated()")
     @PostMapping("/update/{commentId}")
     public CommentDTO updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
-        CommentDTO comment = commentService.updateComment(commentDTO, commentId);
-        return comment;
+        return commentService.updateComment(commentDTO, commentId);
     }
 }
