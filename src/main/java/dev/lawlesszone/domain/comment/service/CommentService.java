@@ -46,6 +46,7 @@ public class CommentService {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException(commentId + "에 해당하는 Comment가 존재하지 않습니다."));
         findComment.setContent(commentRequestDTO.getContent());
+        findComment.setAnonymous(commentRequestDTO.getIsAnonymous());
         return CommentResponseDTO.from(findComment);
     }
 

@@ -51,4 +51,8 @@ public class Comment {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public void setAnonymous(Boolean anonymous) {
+        this.isAnonymous = anonymous;
+    }
 }
