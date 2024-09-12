@@ -1,19 +1,14 @@
 package dev.lawlesszone.domain.atricle.controller;
 
-import dev.lawlesszone.domain.atricle.dto.ArticleDTO;
-import dev.lawlesszone.domain.atricle.entity.Article;
+import dev.lawlesszone.domain.atricle.dto.ArticleWriteRequestDTO;
+import dev.lawlesszone.domain.atricle.dto.ArticleViewResponseDTO;
+import dev.lawlesszone.domain.atricle.dto.ArticleWrtieResponseDTO;
 import dev.lawlesszone.domain.atricle.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,49 +19,36 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @GetMapping(path = "/list")
-    public String ArticleList(Model model) {
-        List<Article> articles = articleService.findAllArticles();
-        model.addAttribute("articles", articles);
+    @GetMapping
+    public ResponseEntity<List<ArticleViewResponseDTO>> ArticleList() {
+        List<ArticleViewResponseDTO> articles = articleService.findAllArticles();
 
-        return "article/articleList";
+        return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/view/{id}")
-    public String ArticleView(Authentication authentication, @PathVariable("id") Long id, Model model) {
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        model.addAttribute("email", email);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ArticleViewResponseDTO> ArticleView(@PathVariable("id") Long id) {
+        ArticleViewResponseDTO article = articleService.findArticleById(id);
 
-        Article article = articleService.findArticleById(id);
-        model.addAttribute("article", article);
-        return "article/articleView";
+        return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/write")
-    public String ArticleWrite() {
-        return  "article/articleWrite";
+    // @PreAuthorize("isAuthenticated()")
+    @PostMapping
+    public ResponseEntity<ArticleWrtieResponseDTO> ArticleSave(@RequestBody ArticleWriteRequestDTO articleWriteRequestDTO) {
+        ArticleWrtieResponseDTO article = articleService.saveArticle(articleWriteRequestDTO);
+        return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
 
-    @PostMapping(path = "/write")
-    public String ArticleSave(ArticleDTO articleDTO) {
-        articleService.saveArticle(articleDTO);
-        return "redirect:/articles/list";
+    //@PreAuthorize("isAuthenticated()")
+    @PutMapping(path = "/update/{id}")
+    public ResponseEntity<ArticleWrtieResponseDTO> ArticleUpdate(@PathVariable("id") Long id, @RequestBody ArticleWriteRequestDTO articleWriteRequestDTO) {
+        ArticleWrtieResponseDTO article = articleService.updateArticle(id, articleWriteRequestDTO);
+        return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/edit/{id}")
-    public String ArticleEdit(@PathVariable("id") Long id, Model model) {
-        Article article = articleService.findArticleById(id);
-        model.addAttribute("article", article);
-        return  "article/articleEdit";
-    }
-
-    @PostMapping(path = "/edit/{id}")
-    public String ArticleEdit(@PathVariable("id") Long id, ArticleDTO articleDTO, Model model) {
-        articleService.updateArticle(articleDTO, id);
-        return "redirect:/articles/view/"+id;
-    }
-
-    @GetMapping(path = "/delete/{id}")
+    // @PreAuthorize("isAuthenticated()")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> ArticleDelete(@PathVariable("id") Long id) {
         articleService.deleteArticle(id);
         return new ResponseEntity<>(HttpStatus.OK);
