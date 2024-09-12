@@ -48,10 +48,6 @@ public class Comment {
         article.getComments().add(this);
     }
 
-    public void setAnonymous(Boolean anonymous) {
-        isAnonymous = anonymous;
-    }
-
     public void setContent(String content) {
         this.content = content;
     }

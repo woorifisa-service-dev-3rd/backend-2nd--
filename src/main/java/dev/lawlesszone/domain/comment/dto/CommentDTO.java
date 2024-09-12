@@ -1,7 +1,5 @@
 package dev.lawlesszone.domain.comment.dto;
 
-import dev.lawlesszone.domain.Member.entity.Member;
-import dev.lawlesszone.domain.atricle.entity.Article;
 import dev.lawlesszone.domain.comment.entity.Comment;
 import lombok.*;
 
@@ -25,6 +23,7 @@ public class CommentDTO {
     public static CommentDTO from(Comment comment) {
         return CommentDTO.builder()
                 .content(comment.getContent())
+                .nickName((comment.getAuthor() != null) ? comment.getAuthor().getNickName() : null)
                 .isAnonymous(comment.getIsAnonymous())
                 .build();
     }

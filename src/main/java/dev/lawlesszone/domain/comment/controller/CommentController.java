@@ -6,9 +6,7 @@ import dev.lawlesszone.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +27,6 @@ public class CommentController {
     @PostMapping
     public CommentDTO addComment(@AuthenticationPrincipal CustomUserDetail customUserDetail, @PathVariable Long articleId, @RequestBody CommentDTO commentDTO) {
         String email = customUserDetail.getEmail();
-        System.out.println("email = " + email);
         return commentService.saveComment(commentDTO, articleId, email);
     }
 

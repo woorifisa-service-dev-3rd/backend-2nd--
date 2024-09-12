@@ -36,9 +36,9 @@ public class CommentService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException(email + "에 해당하는 Member가 존재하지 않습니다."));
 
+        System.out.println(member);
         Comment comment = Comment.of(commentDTO, member, findArticle);
-        comment.setAnonymous(true); // TODO: 로그인 여부에 따른 설정
-
+        System.out.println("comment.getAuthor() = " + comment.getAuthor());
         return CommentDTO.from(commentRepository.save(comment));
     }
 
