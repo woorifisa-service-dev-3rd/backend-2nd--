@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @ToString
 public class PaymentDTO {
-    private String impUid   ;
+    private String impUid;
     private String merchantUid;
     private String amount;
 }

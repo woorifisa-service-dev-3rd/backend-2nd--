@@ -1,24 +1,18 @@
 package dev.lawlesszone.domain.payment.controller;
 
 
-import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
-import dev.lawlesszone.domain.Member.entity.Member;
-import dev.lawlesszone.domain.Member.service.MemberService;
 import dev.lawlesszone.domain.payment.dto.PaymentDTO;
 import dev.lawlesszone.domain.payment.dto.SendPaymentDTO;
 import dev.lawlesszone.domain.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,36 +24,41 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final MemberService memberService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public ModelAndView showPaymentList(@AuthenticationPrincipal UserDetails userDetails) {
-        ModelAndView mav = new ModelAndView();
-        List<SendPaymentDTO> paymentList=paymentService.findValidPaymentsByMemberEmail(userDetails.getUsername());
-
-        if (paymentList.isEmpty()) {
-            mav.setViewName("redirect:/member/detail");
-            return mav;
-        }
-        mav.addObject("paymentList", paymentList);
-        mav.setViewName("payment/list");
-        return mav;
+    public ResponseEntity<List<SendPaymentDTO>> showPaymentList(@AuthenticationPrincipal UserDetails userDetails) {
+        List<SendPaymentDTO> paymentList = paymentService.findValidPaymentsByMemberEmail(userDetails.getUsername());
+        return ResponseEntity.ok(paymentList);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/cancel")
-    public ModelAndView cancelPayment(@PathVariable Long id) {
-        return paymentService.cancelPayment(id);
+    public ResponseEntity<?> cancelPayment(@PathVariable Long id) {
+        int result = paymentService.cancelPayment(id);
+        if (result == 1) {
+            return ResponseEntity.badRequest().body("현재 취소할게 없습니다");
+        } else if (result == 2) {
+            return ResponseEntity.badRequest().body("현재꺼는 기간 만료입니다");
+        } else if (result == 3) {
+            return ResponseEntity.badRequest().body("이미 완료됨");
+        } else if (result == 4) {
+            return ResponseEntity.badRequest().body("취소 거부됨");
+        } else if (result == 5){
+            return ResponseEntity.ok("취소가 완료되었습니다");
+        }
+        else
+            return ResponseEntity.badRequest().body("무언가 오류남");
     }
 
-    //id 넣어 놓고
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/validate/{uid}")
-    public ModelAndView createPayment(@RequestBody PaymentDTO paymentDTO,
-                                @AuthenticationPrincipal UserDetails userDetails) throws IamportResponseException, IOException {
+    public ResponseEntity<?> createPayment(@RequestBody PaymentDTO paymentDTO,
+                                           @AuthenticationPrincipal UserDetails userDetails) throws IamportResponseException, IOException {
         log.info("결제 처리 진행중");
-        return paymentService.checkValid(paymentDTO,userDetails.getUsername());
+        if (paymentService.checkValid(paymentDTO, userDetails.getUsername())) {
+            ResponseEntity.ok("결제완료");
+        }
+        return ResponseEntity.badRequest().body("결제 실패");
     }
-
 }

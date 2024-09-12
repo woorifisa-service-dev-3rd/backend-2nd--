@@ -20,12 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,15 +37,16 @@ public class PaymentService {
     private final IamportClient iamportClient;
 
     @Transactional
-    public ModelAndView checkValid(PaymentDTO paymentDTO ,String email) throws IamportResponseException, IOException {
-        ModelAndView mav= new ModelAndView();
-        mav.setViewName("redirect:/member/detail");
+    public boolean checkValid(PaymentDTO paymentDTO, String email) throws IamportResponseException, IOException {
+//        ModelAndView mav= new ModelAndView();
+//        mav.setViewName("redirect:/member/detail");
         log.info("결제 검증 중");
-        IamportResponse<com.siot.IamportRestClient.response.Payment> response= iamportClient.paymentByImpUid(paymentDTO.getImpUid());
-        if (response.getCode() != 0||  response.getResponse().getAmount().compareTo(BigDecimal.valueOf(100)) != 0 ) {
-            mav.addObject("result", "결제 오류");
+        IamportResponse<com.siot.IamportRestClient.response.Payment> response =
+                iamportClient.paymentByImpUid(paymentDTO.getImpUid());
+        if (response.getCode() != 0 || response.getResponse().getAmount().compareTo(BigDecimal.valueOf(100)) != 0) {
+//            mav.addObject("result", "결제 오류");
             log.info("결제 오류");
-            return mav;
+            return false;
         }
 
         Member member = memberRepository.findByEmail(email).orElseThrow();
@@ -58,9 +57,9 @@ public class PaymentService {
 
         newPayment.addMember(member);
         paymentRepository.save(newPayment);
-        mav.addObject("result", "결제 완료");
+//        mav.addObject("result", "결제 완료");
         log.info("결제완료");
-        return mav;
+        return true;
 
     }
 
@@ -72,27 +71,22 @@ public class PaymentService {
     }
 
     @Transactional
-    public ModelAndView cancelPayment(Long id) {
-        ModelAndView mav = new ModelAndView();
+    public int cancelPayment(Long id) {
+
         Payment payment = paymentRepository.findById(id).orElseThrow();
-        mav.setViewName("redirect:/member/detail");
+
         if (!payment.isValid()) {
-            mav.addObject("result", "현재 취소할게 없습니다");
-            return mav;
+            return 1;
         }
         Integer code = checkCancel(payment, getToken());
         if (code == null) {
-            mav.addObject("result", "현재꺼는 기간 만료입니다");
-            return mav;
+            return 2;
         } else if (code == 1) {
-            mav.addObject("result", "이미 완료됨");
-            return mav;
+            return 3;
         } else if (code == 400) {
-            mav.addObject("result", "취소 거부됨");
-            return mav;
+            return 4;
         }
-        mav.addObject("result", "취소가 완료되었습니다");
-        return mav;
+        return 5;
     }
 
     @Transactional
