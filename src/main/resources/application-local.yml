@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/LawlessZone
+    url: jdbc:mysql://localhost:3307/LawlessZone
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 1234
+    password: '0000'
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
@@ -12,3 +12,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+jwt:
+  secret: 3a10fdf1eb14aba357f68898ab295d3e7a4776c423d8f0d17a5824bdd6e48f2335ff7e3e3b3bfc1569e479b00be9f9fb490af63e9c4c1111df2015f10899fbd6
