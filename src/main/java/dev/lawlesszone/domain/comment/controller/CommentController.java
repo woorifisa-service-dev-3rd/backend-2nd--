@@ -1,7 +1,8 @@
 package dev.lawlesszone.domain.comment.controller;
 
 import dev.lawlesszone.domain.Member.dto.CustomUserDetail;
-import dev.lawlesszone.domain.comment.dto.CommentDTO;
+import dev.lawlesszone.domain.comment.dto.CommentRequestDTO;
+import dev.lawlesszone.domain.comment.dto.CommentResponseDTO;
 import dev.lawlesszone.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,15 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<CommentDTO> getComments(@PathVariable Long articleId) {
+    public List<CommentResponseDTO> getComments(@PathVariable Long articleId) {
         return commentService.getComments(articleId);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public CommentDTO addComment(@AuthenticationPrincipal CustomUserDetail customUserDetail, @PathVariable Long articleId, @RequestBody CommentDTO commentDTO) {
+    public CommentResponseDTO addComment(@AuthenticationPrincipal CustomUserDetail customUserDetail, @PathVariable Long articleId, @RequestBody CommentRequestDTO commentRequestDTO) {
         String email = customUserDetail.getEmail();
-        return commentService.saveComment(commentDTO, articleId, email);
+        return commentService.saveComment(commentRequestDTO, articleId, email);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -39,7 +40,7 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/update/{commentId}")
-    public CommentDTO updateComment(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
-        return commentService.updateComment(commentDTO, commentId);
+    public CommentResponseDTO updateComment(@PathVariable Long commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
+        return commentService.updateComment(commentRequestDTO, commentId);
     }
 }

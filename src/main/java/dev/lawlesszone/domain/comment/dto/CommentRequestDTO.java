@@ -10,20 +10,17 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentDTO {
+public class CommentRequestDTO {
 
     @NotNull
     private String content;
 
-    private String nickName;
-
     @NotNull
     private Boolean isAnonymous;
 
-    public static CommentDTO from(Comment comment) {
-        return CommentDTO.builder()
+    public static CommentRequestDTO from(Comment comment) {
+        return CommentRequestDTO.builder()
                 .content(comment.getContent())
-                .nickName((comment.getAuthor() != null) ? comment.getAuthor().getNickName() : null)
                 .isAnonymous(comment.getIsAnonymous())
                 .build();
     }
