@@ -1,11 +1,13 @@
 package dev.lawlesszone.domain.comment.controller;
 
+import dev.lawlesszone.domain.Member.dto.CustomUserDetail;
 import dev.lawlesszone.domain.comment.dto.CommentDTO;
 import dev.lawlesszone.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +27,9 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public CommentDTO addComment(Authentication authentication, @PathVariable Long articleId, CommentDTO commentDTO) {
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+    public CommentDTO addComment(@AuthenticationPrincipal CustomUserDetail customUserDetail, @PathVariable Long articleId, @RequestBody CommentDTO commentDTO) {
+        String email = customUserDetail.getEmail();
+        System.out.println("email = " + email);
         return commentService.saveComment(commentDTO, articleId, email);
     }
 
