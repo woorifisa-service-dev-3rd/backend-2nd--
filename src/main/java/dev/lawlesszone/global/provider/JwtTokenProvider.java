@@ -72,7 +72,7 @@ public class JwtTokenProvider {
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
         CustomUserDetail userDetail = CustomUserDetail.builder()
-                .Id((Long) claims.get("id"))
+                .Id((long) (int) claims.get("id"))
                 .email((String) claims.get("email"))
                 .authorities(authorities)
                 .build();

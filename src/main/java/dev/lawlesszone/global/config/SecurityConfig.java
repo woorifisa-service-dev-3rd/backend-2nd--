@@ -1,6 +1,7 @@
 package dev.lawlesszone.global.config;
 
 import dev.lawlesszone.domain.Member.service.MemberService;
+import dev.lawlesszone.global.filter.JwtAuthenticationFilter;
 import dev.lawlesszone.global.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +42,7 @@ public class SecurityConfig {
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/member/login").permitAll()
                 .antMatchers("/member/singup").permitAll()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
         http
                 .headers()
@@ -56,8 +58,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .formLogin().disable()
-                .exceptionHandling(exceptionHandleConfig -> exceptionHandleConfig.authenticationEntryPoint(
-                        new HttpStatusEntryPoint(HttpStatus.NOT_FOUND)));
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
