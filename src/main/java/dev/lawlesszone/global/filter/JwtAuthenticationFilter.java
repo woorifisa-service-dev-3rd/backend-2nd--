@@ -24,22 +24,21 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        String token = jwtTokenProvider.resolveToken(request);
+
         String path = request.getRequestURI();
+        System.out.println("path" + path);
         if (path.equals("/member/login") || path.equals("/member/signup") || path.equals("/swagger-ui/index.html")) {
+            System.out.println("필요없는 요청이에용");
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
+        String token = jwtTokenProvider.resolveToken(request);
         // 토큰 유효성 검사
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else if (token == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인되지 않았습니다.");
-            return;
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, "토큰이 만료되었습니다.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인되지 않았습니다.");
             return;
         }
         filterChain.doFilter(servletRequest, servletResponse);
