@@ -2,9 +2,8 @@ package dev.lawlesszone.domain.atricle.service;
 
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.Member.repository.MemberRepository;
-import dev.lawlesszone.domain.atricle.dto.ArticleWriteRequestDTO;
-import dev.lawlesszone.domain.atricle.dto.ArticleViewResponseDTO;
-import dev.lawlesszone.domain.atricle.dto.ArticleWrtieResponseDTO;
+import dev.lawlesszone.domain.atricle.dto.ArticleRequestDTO;
+import dev.lawlesszone.domain.atricle.dto.ArticleResponseDTO;
 import dev.lawlesszone.domain.atricle.entity.Article;
 import dev.lawlesszone.domain.atricle.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,38 +19,38 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
 
-    public List<ArticleViewResponseDTO> findAllArticles() {
+    public List<ArticleResponseDTO> findAllArticles() {
         List<Article> articles = articleRepository.findAll();
         
-        List<ArticleViewResponseDTO> articleResponses = articles.stream()
-                .map(ArticleViewResponseDTO::from).collect(Collectors.toList());
+        List<ArticleResponseDTO> articleResponses = articles.stream()
+                .map(ArticleResponseDTO::from).collect(Collectors.toList());
         return articleResponses;
     }
 
-    public ArticleViewResponseDTO findArticleById(Long id) {
+    public ArticleResponseDTO findArticleById(Long id) {
         Article article = articleRepository.findById(id).orElseThrow(()-> new RuntimeException(id+"와 일치하는 Article이 없습니다!"));
-        return ArticleViewResponseDTO.from(article);
+        return ArticleResponseDTO.from(article);
     }
 
     @Transactional
-    public ArticleWrtieResponseDTO saveArticle(ArticleWriteRequestDTO articleWriteRequestDTO) {
-        Member author = memberRepository.findById(articleWriteRequestDTO.getMemberId())
-                .orElseThrow(()-> new RuntimeException(articleWriteRequestDTO.getMemberId() + "에 해당하는 유저가 존재하지 않습니다."));
-        Article article = Article.from(articleWriteRequestDTO);
+    public ArticleResponseDTO saveArticle(ArticleRequestDTO articleRequestDTO) {
+        Member author = memberRepository.findById(articleRequestDTO.getMemberId())
+                .orElseThrow(()-> new RuntimeException(articleRequestDTO.getMemberId() + "에 해당하는 유저가 존재하지 않습니다."));
+        Article article = Article.from(articleRequestDTO);
         article.setAuthor(author);
 
         Article savedArticle = articleRepository.save(article);
 
-         return ArticleWrtieResponseDTO.from(savedArticle);
+        return ArticleResponseDTO.from(savedArticle);
     }
 
     @Transactional
-    public ArticleWrtieResponseDTO updateArticle(Long id, ArticleWriteRequestDTO articleWriteRequestDTO) {
+    public ArticleResponseDTO updateArticle(Long id, ArticleRequestDTO articleRequestDTO) {
         Article updateArticle = articleRepository.findById(id).orElseThrow(()-> new RuntimeException( id + "에 해당하는 Article이 존재하지 않습니다."));
-        Article article = Article.from(articleWriteRequestDTO);
+        Article article = Article.from(articleRequestDTO);
         updateArticle.updateArticle(article);
 
-        return ArticleWrtieResponseDTO.from(updateArticle);
+        return ArticleResponseDTO.from(updateArticle);
     }
 
     @Transactional
