@@ -1,12 +1,12 @@
 package dev.lawlesszone.domain.atricle.controller;
 
-import dev.lawlesszone.domain.atricle.dto.ArticleWriteRequestDTO;
-import dev.lawlesszone.domain.atricle.dto.ArticleViewResponseDTO;
-import dev.lawlesszone.domain.atricle.dto.ArticleWrtieResponseDTO;
+import dev.lawlesszone.domain.atricle.dto.ArticleRequestDTO;
+import dev.lawlesszone.domain.atricle.dto.ArticleResponseDTO;
 import dev.lawlesszone.domain.atricle.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,34 +20,34 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping
-    public ResponseEntity<List<ArticleViewResponseDTO>> ArticleList() {
-        List<ArticleViewResponseDTO> articles = articleService.findAllArticles();
+    public ResponseEntity<List<ArticleResponseDTO>> ArticleList() {
+        List<ArticleResponseDTO> articles = articleService.findAllArticles();
 
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ArticleViewResponseDTO> ArticleView(@PathVariable("id") Long id) {
-        ArticleViewResponseDTO article = articleService.findArticleById(id);
+    public ResponseEntity<ArticleResponseDTO> ArticleView(@PathVariable("id") Long id) {
+        ArticleResponseDTO article = articleService.findArticleById(id);
 
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
-    // @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<ArticleWrtieResponseDTO> ArticleSave(@RequestBody ArticleWriteRequestDTO articleWriteRequestDTO) {
-        ArticleWrtieResponseDTO article = articleService.saveArticle(articleWriteRequestDTO);
+    public ResponseEntity<ArticleResponseDTO> ArticleSave(@RequestBody ArticleRequestDTO articleRequestDTO) {
+        ArticleResponseDTO article = articleService.saveArticle(articleRequestDTO);
         return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
 
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<ArticleWrtieResponseDTO> ArticleUpdate(@PathVariable("id") Long id, @RequestBody ArticleWriteRequestDTO articleWriteRequestDTO) {
-        ArticleWrtieResponseDTO article = articleService.updateArticle(id, articleWriteRequestDTO);
+    public ResponseEntity<ArticleResponseDTO> ArticleUpdate(@PathVariable("id") Long id, @RequestBody ArticleRequestDTO articleRequestDTO) {
+        ArticleResponseDTO article = articleService.updateArticle(id, articleRequestDTO);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
-    // @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> ArticleDelete(@PathVariable("id") Long id) {
         articleService.deleteArticle(id);
