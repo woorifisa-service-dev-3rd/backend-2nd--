@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/member/login").permitAll()
                 .antMatchers("/member/singup").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated();
 
         http
@@ -57,8 +58,8 @@ public class SecurityConfig {
                 .and()
                 .cors()
                 .and()
-                .formLogin().disable()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .formLogin().disable();
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

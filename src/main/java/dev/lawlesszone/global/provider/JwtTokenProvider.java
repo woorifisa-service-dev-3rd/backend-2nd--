@@ -58,6 +58,7 @@ public class JwtTokenProvider {
                 .claim("id", id)
                 .claim("email", email)
                 .claim("auth", authorities)
+                .claim("nickName", member.getNickName())
                 .expiration(accessTokenExpire)
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
@@ -74,6 +75,7 @@ public class JwtTokenProvider {
         CustomUserDetail userDetail = CustomUserDetail.builder()
                 .Id((long) (int) claims.get("id"))
                 .email((String) claims.get("email"))
+                .nickName((String)claims.get("nickName"))
                 .authorities(authorities)
                 .build();
 
@@ -82,7 +84,10 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+            Claims claims= Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+
+            if(claims.getExpiration().before(new Date()))
+                return false;
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -50,8 +51,9 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail")
-    public ResponseEntity<MemberInfoDTO> user(Authentication authentication, Model model) {
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+    public ResponseEntity<MemberInfoDTO> user(@AuthenticationPrincipal CustomUserDetail customUserDetail, Model model) {
+        String email = customUserDetail.getEmail();
+        log.info("이메일"+email);
         return new ResponseEntity<>(memberService.findByEmail(email), HttpStatus.OK);
     }
 }

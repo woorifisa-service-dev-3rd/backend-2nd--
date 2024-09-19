@@ -2,6 +2,7 @@ package dev.lawlesszone.domain.payment.controller;
 
 
 import com.siot.IamportRestClient.exception.IamportResponseException;
+import dev.lawlesszone.domain.Member.dto.CustomUserDetail;
 import dev.lawlesszone.domain.payment.dto.PaymentDTO;
 import dev.lawlesszone.domain.payment.dto.SendPaymentDTO;
 import dev.lawlesszone.domain.payment.service.PaymentService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@Controller()
+@RestController
 @RequestMapping("/payment")
 @RequiredArgsConstructor
 @Slf4j
@@ -27,14 +28,17 @@ public class PaymentController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public ResponseEntity<List<SendPaymentDTO>> showPaymentList(@AuthenticationPrincipal UserDetails userDetails) {
-        List<SendPaymentDTO> paymentList = paymentService.findValidPaymentsByMemberEmail(userDetails.getUsername());
+    public ResponseEntity<List<SendPaymentDTO>> showPaymentList(@AuthenticationPrincipal CustomUserDetail customUserDetail) {
+        log.info(customUserDetail.toString());
+        List<SendPaymentDTO> paymentList = paymentService.findValidPaymentsByMemberEmail(customUserDetail.getEmail());
+        log.info(paymentList.toString());
         return ResponseEntity.ok(paymentList);
     }
 
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/cancel")
     public ResponseEntity<?> cancelPayment(@PathVariable Long id) {
+        log.info("여기 왔음");
         int result = paymentService.cancelPayment(id);
         if (result == 1) {
             return ResponseEntity.badRequest().body("현재 취소할게 없습니다");
@@ -51,14 +55,19 @@ public class PaymentController {
             return ResponseEntity.badRequest().body("무언가 오류남");
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/validate/{uid}")
+//    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/validate")
     public ResponseEntity<?> createPayment(@RequestBody PaymentDTO paymentDTO,
-                                           @AuthenticationPrincipal UserDetails userDetails) throws IamportResponseException, IOException {
+                                           @AuthenticationPrincipal CustomUserDetail customUserDetail) throws IamportResponseException, IOException {
+        log.info(paymentDTO.getImpUid());
         log.info("결제 처리 진행중");
-        if (paymentService.checkValid(paymentDTO, userDetails.getUsername())) {
-            ResponseEntity.ok("결제완료");
+        if (paymentService.checkValid(paymentDTO,"testuser01@testmail.com")) {
+            return ResponseEntity.ok("결제완료");
         }
         return ResponseEntity.badRequest().body("결제 실패");
+    }
+    @GetMapping()
+    public void pay(){
+
     }
 }

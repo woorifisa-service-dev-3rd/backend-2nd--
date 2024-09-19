@@ -78,10 +78,13 @@ public class PaymentService {
         if (!payment.isValid()) {
             return 1;
         }
+
         Integer code = checkCancel(payment, getToken());
         if (code == null) {
+            payment.invalidate();
             return 2;
         } else if (code == 1) {
+            payment.invalidate();
             return 3;
         } else if (code == 400) {
             return 4;
