@@ -1,7 +1,7 @@
 package dev.lawlesszone.domain.atricle.entity;
 
 import dev.lawlesszone.domain.Member.entity.Member;
-import dev.lawlesszone.domain.atricle.dto.ArticleWriteRequestDTO;
+import dev.lawlesszone.domain.atricle.dto.ArticleRequestDTO;
 import dev.lawlesszone.domain.comment.entity.Comment;
 import lombok.*;
 
@@ -34,11 +34,11 @@ public class Article {
 
     private Long viewCount;
 
-    public static Article from (ArticleWriteRequestDTO articleWriteRequestDTO) {
+    public static Article from (ArticleRequestDTO articleRequestDTO) {
         return Article.builder()
-                .title(articleWriteRequestDTO.getTitle())
-                .content(articleWriteRequestDTO.getContent())
-                .viewCount(articleWriteRequestDTO.getViewCount())
+                .title(articleRequestDTO.getTitle())
+                .content(articleRequestDTO.getContent())
+                .viewCount(articleRequestDTO.getViewCount())
                 .build();
     }
 

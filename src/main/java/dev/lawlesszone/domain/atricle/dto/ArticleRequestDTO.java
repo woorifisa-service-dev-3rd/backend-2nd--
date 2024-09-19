@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @ToString
 @Builder
-public class ArticleWriteRequestDTO {
+public class ArticleRequestDTO {
     @NotNull
     private Long memberId;
 

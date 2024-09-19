@@ -1,7 +1,5 @@
 package dev.lawlesszone.domain.comment.dto;
 
-import dev.lawlesszone.domain.Member.entity.Member;
-import dev.lawlesszone.domain.atricle.entity.Article;
 import dev.lawlesszone.domain.comment.entity.Comment;
 import lombok.*;
 
@@ -12,18 +10,16 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentDTO {
+public class CommentRequestDTO {
 
     @NotNull
     private String content;
 
-    private String nickName;
-
     @NotNull
     private Boolean isAnonymous;
 
-    public static CommentDTO from(Comment comment) {
-        return CommentDTO.builder()
+    public static CommentRequestDTO from(Comment comment) {
+        return CommentRequestDTO.builder()
                 .content(comment.getContent())
                 .isAnonymous(comment.getIsAnonymous())
                 .build();

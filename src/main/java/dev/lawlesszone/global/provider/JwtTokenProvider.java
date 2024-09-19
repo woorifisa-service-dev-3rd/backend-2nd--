@@ -22,6 +22,7 @@ import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -52,7 +53,6 @@ public class JwtTokenProvider {
         Long id = member.getId();
 
         Date accessTokenExpire = Date.from(ZonedDateTime.now().plusMonths(1).toInstant());
-        System.out.println(accessTokenExpire);
         String accessToken = Jwts.builder()
                 .subject(authentication.getName())
                 .claim("id", id)
@@ -109,11 +109,12 @@ public class JwtTokenProvider {
         }
     }
 
-    public String resolveToken(HttpServletRequest request) {    if (request.getCookies() != null) {
-        for (Cookie cookie : request.getCookies()) {
-            if ("accessToken".equals(cookie.getName())) {
-                return cookie.getValue();
-            }
+    public String resolveToken(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
         }
     }
         return null;

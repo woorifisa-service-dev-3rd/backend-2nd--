@@ -4,7 +4,8 @@ import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.Member.repository.MemberRepository;
 import dev.lawlesszone.domain.atricle.entity.Article;
 import dev.lawlesszone.domain.atricle.repository.ArticleRepository;
-import dev.lawlesszone.domain.comment.dto.CommentDTO;
+import dev.lawlesszone.domain.comment.dto.CommentRequestDTO;
+import dev.lawlesszone.domain.comment.dto.CommentResponseDTO;
 import dev.lawlesszone.domain.comment.entity.Comment;
 import dev.lawlesszone.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,31 +24,30 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final ArticleRepository articleRepository;
 
-    public List<CommentDTO> getComments(Long articleId) {
+    public List<CommentResponseDTO> getComments(Long articleId) {
        return commentRepository.findByArticleId(articleId)
-               .stream().map(comment -> CommentDTO.from(comment))
+               .stream().map(comment -> CommentResponseDTO.from(comment))
                .collect(Collectors.toList());
     }
 
-    public CommentDTO saveComment(CommentDTO commentDTO, Long articleId, String email) {
+    public CommentResponseDTO saveComment(CommentRequestDTO commentRequestDTO, Long articleId, String email) {
         Article findArticle = articleRepository.findById(articleId)
                 .orElseThrow(() -> new RuntimeException(articleId + "에 해당하는 Article이 존재하지 않습니다."));
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException(email + "에 해당하는 Member가 존재하지 않습니다."));
 
-        Comment comment = Comment.of(commentDTO, member, findArticle);
-        comment.setAnonymous(true); // TODO: 로그인 여부에 따른 설정
-
-        return CommentDTO.from(commentRepository.save(comment));
+        Comment comment = Comment.of(commentRequestDTO, member, findArticle);
+        return CommentResponseDTO.from(commentRepository.save(comment));
     }
 
     @Transactional
-    public CommentDTO updateComment(CommentDTO commentDTO, Long commentId) {
+    public CommentResponseDTO updateComment(CommentRequestDTO commentRequestDTO, Long commentId) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException(commentId + "에 해당하는 Comment가 존재하지 않습니다."));
-        findComment.setContent(commentDTO.getContent());
-        return CommentDTO.from(findComment);
+        findComment.setContent(commentRequestDTO.getContent());
+        findComment.setAnonymous(commentRequestDTO.getIsAnonymous());
+        return CommentResponseDTO.from(findComment);
     }
 
     public void deleteComment(Long commentId) {

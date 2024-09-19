@@ -2,7 +2,7 @@ package dev.lawlesszone.domain.comment.entity;
 
 import dev.lawlesszone.domain.Member.entity.Member;
 import dev.lawlesszone.domain.atricle.entity.Article;
-import dev.lawlesszone.domain.comment.dto.CommentDTO;
+import dev.lawlesszone.domain.comment.dto.CommentRequestDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,7 +30,7 @@ public class Comment {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    public static Comment of(CommentDTO comment, Member member, Article article) {
+    public static Comment of(CommentRequestDTO comment, Member member, Article article) {
         return Comment.builder()
                 .content(comment.getContent())
                 .author(member)
@@ -48,11 +48,11 @@ public class Comment {
         article.getComments().add(this);
     }
 
-    public void setAnonymous(Boolean anonymous) {
-        isAnonymous = anonymous;
-    }
-
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setAnonymous(Boolean anonymous) {
+        this.isAnonymous = anonymous;
     }
 }
