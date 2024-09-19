@@ -35,7 +35,7 @@ public class PaymentController {
         return ResponseEntity.ok(paymentList);
     }
 
-//    @PreAuthorize("isAuthenticated()")
+    //    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/cancel")
     public ResponseEntity<?> cancelPayment(@PathVariable Long id) {
         log.info("여기 왔음");
@@ -55,13 +55,14 @@ public class PaymentController {
             return ResponseEntity.badRequest().body("무언가 오류남");
     }
 
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/validate")
     public ResponseEntity<?> createPayment(@RequestBody PaymentDTO paymentDTO,
                                            @AuthenticationPrincipal CustomUserDetail customUserDetail) throws IamportResponseException, IOException {
         log.info(paymentDTO.getImpUid());
         log.info("결제 처리 진행중");
-        if (paymentService.checkValid(paymentDTO,"testuser01@testmail.com")) {
+        log.info("하이"+customUserDetail.getEmail());
+        if (paymentService.checkValid(paymentDTO,customUserDetail.getEmail())) {
             return ResponseEntity.ok("결제완료");
         }
         return ResponseEntity.badRequest().body("결제 실패");
