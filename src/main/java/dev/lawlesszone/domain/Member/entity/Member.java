@@ -26,7 +26,8 @@ public class Member {
 
     private String password;
 
-    private String authorities;
+    @Builder.Default
+    private String authorities="ROLE_USER";
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Article> articles;

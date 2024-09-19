@@ -16,7 +16,7 @@ public class CustomUserDetail implements UserDetails {
     private final Long Id;
     private final String email;
     private final Collection<? extends GrantedAuthority> authorities;
-
+    private final String nickName;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
