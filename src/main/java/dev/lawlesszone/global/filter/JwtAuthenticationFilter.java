@@ -26,9 +26,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String path = request.getRequestURI();
-        System.out.println("path" + path);
         if (path.equals("/member/login") || path.equals("/member/signup") || path.equals("/swagger-ui/index.html")) {
-            System.out.println("필요없는 요청이에용");
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }

@@ -76,4 +76,9 @@ public class MemberService implements UserDetailsService {
                 .authorities(authorities)
                 .build();
     }
+
+    public String getAuthorityById(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        return member.getAuthorities();
+    }
 }

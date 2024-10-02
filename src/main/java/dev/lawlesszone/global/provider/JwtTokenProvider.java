@@ -68,11 +68,17 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
+//        Collection<? extends GrantedAuthority> authorities =
+//                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+
+        Long userUid = (long) (int) claims.get("id");
+        String userAuthorities = memberService.getAuthorityById(userUid);
+
         Collection<? extends GrantedAuthority> authorities =
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+                Collections.singleton(new SimpleGrantedAuthority(String.format("ROLE_%s", userAuthorities)));
 
         CustomUserDetail userDetail = CustomUserDetail.builder()
-                .Id((long) (int) claims.get("id"))
+                .Id(userUid)
                 .email((String) claims.get("email"))
                 .authorities(authorities)
                 .build();

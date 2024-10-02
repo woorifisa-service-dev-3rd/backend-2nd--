@@ -1,6 +1,7 @@
 package dev.lawlesszone.domain.comment.controller;
 
-import dev.lawlesszone.domain.comment.dto.CommentDTO;
+import dev.lawlesszone.domain.comment.dto.CommentRequestDTO;
+import dev.lawlesszone.domain.comment.dto.CommentResponseDTO;
 import dev.lawlesszone.domain.comment.service.CommentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,13 @@ class CommentControllerTest {
 
     @Test
     void addComment() {
-        CommentDTO comment = CommentDTO.builder()
-                .nickName("박준현")
+        CommentRequestDTO comment = CommentRequestDTO.builder()
                 .content("메롱")
                 .isAnonymous(true)
                 .build();
         Long articleId = 1l;
         String email = "testuser01@testmail.com";
-        CommentDTO newComment = commentService.saveComment(comment, articleId, email);
+        CommentResponseDTO newComment = commentService.saveComment(comment, articleId, email);
 
         assertThat(newComment.getNickName()).isEqualTo("박준현");
         assertThat(newComment.getContent()).isEqualTo("메롱");
