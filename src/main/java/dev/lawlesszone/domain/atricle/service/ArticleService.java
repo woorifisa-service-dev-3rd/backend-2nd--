@@ -33,8 +33,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponseDTO saveArticle(ArticleRequestDTO articleRequestDTO) {
-        Member author = memberRepository.findById(articleRequestDTO.getMemberId())
+    public ArticleResponseDTO saveArticle(ArticleRequestDTO articleRequestDTO, Long userId) {
+        Member author = memberRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException(articleRequestDTO.getMemberId() + "에 해당하는 유저가 존재하지 않습니다."));
         Article article = Article.from(articleRequestDTO);
         article.setAuthor(author);
