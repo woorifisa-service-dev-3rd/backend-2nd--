@@ -46,8 +46,7 @@ public class ArticleController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<ArticleResponseDTO> ArticleUpdate(@AuthenticationPrincipal CustomUserDetail customUserDetail,
-                                                            @PathVariable("id") Long id,
+    public ResponseEntity<ArticleResponseDTO> ArticleUpdate(@PathVariable("id") Long id,
                                                             @RequestBody ArticleRequestDTO articleRequestDTO) {
         ArticleResponseDTO article = articleService.updateArticle(id, articleRequestDTO);
         return new ResponseEntity<>(article, HttpStatus.OK);
