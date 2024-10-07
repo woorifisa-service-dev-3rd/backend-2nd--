@@ -1,5 +1,6 @@
 package dev.lawlesszone.domain.atricle.controller;
 
+import dev.lawlesszone.domain.Member.dto.CustomUserDetail;
 import dev.lawlesszone.domain.atricle.dto.ArticleRequestDTO;
 import dev.lawlesszone.domain.atricle.dto.ArticleResponseDTO;
 import dev.lawlesszone.domain.atricle.service.ArticleService;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,14 +37,17 @@ public class ArticleController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<ArticleResponseDTO> ArticleSave(@RequestBody ArticleRequestDTO articleRequestDTO) {
-        ArticleResponseDTO article = articleService.saveArticle(articleRequestDTO);
+    public ResponseEntity<ArticleResponseDTO> ArticleSave(@AuthenticationPrincipal CustomUserDetail customUserDetail,
+                                                          @RequestBody ArticleRequestDTO articleRequestDTO) {
+
+        ArticleResponseDTO article = articleService.saveArticle(articleRequestDTO, customUserDetail.getId());
         return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<ArticleResponseDTO> ArticleUpdate(@PathVariable("id") Long id, @RequestBody ArticleRequestDTO articleRequestDTO) {
+    public ResponseEntity<ArticleResponseDTO> ArticleUpdate(@PathVariable("id") Long id,
+                                                            @RequestBody ArticleRequestDTO articleRequestDTO) {
         ArticleResponseDTO article = articleService.updateArticle(id, articleRequestDTO);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
