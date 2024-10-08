@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: LawlessZone
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  frontend:
+    image: kongsoyeon/lawlesszone-frontend:1.0
+    ports:
+      - 3000:3000
+    environment:
+      - NEXT_PUBLIC_BASE_URL=http://backend:8080
+
+  backend:
+    image: kongsoyeon/lawlesszone-backend:1.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/LawlessZone
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+
+volumes:
+  db_data:
